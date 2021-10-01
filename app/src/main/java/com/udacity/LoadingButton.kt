@@ -24,6 +24,7 @@ class LoadingButton @JvmOverloads constructor(
     private val r = Rect()
     private val pointPosition: PointF = PointF(0.0f, 0.0f)
 
+    private var isAnyOptionChosen = false
     private val circleRadius = 35.0f
     private val rectRadius = 45.0f
     private val circleOffset = 20.0f
@@ -32,7 +33,7 @@ class LoadingButton @JvmOverloads constructor(
     private var textEnd = pointPosition.x
     private var circleEnd = pointPosition.x
     private var value = pointPosition.x
-    private var durationAnimation = 3000L
+    private var durationAnimation = 2000L
 
     private var valueAnimatorCircle = ValueAnimator()
     private var valueAnimatorBar = ValueAnimator()
@@ -45,20 +46,22 @@ class LoadingButton @JvmOverloads constructor(
         color = textColor
     }
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
-        when (new) {
-            ButtonState.Loading -> {
-                buttonText = resources.getString(R.string.button_loading)
-                animatorSet.playTogether(circleAnimation(), progressBarAnimation())
-                animatorSet.start()
-            }
-            else -> {
-                buttonText = resources.getString(R.string.download)
-                animatorSet.cancel()
-                value = pointPosition.x
-                circleEnd = value
-                rectEnd = value
-                invalidate()
+    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
+        if(isAnyOptionChosen) {
+            when (new) {
+                ButtonState.Loading -> {
+                    buttonText = resources.getString(R.string.button_loading)
+                    animatorSet.playTogether(circleAnimation(), progressBarAnimation())
+                    animatorSet.start()
+                }
+                else -> {
+                    buttonText = resources.getString(R.string.download)
+                    animatorSet.cancel()
+                    value = pointPosition.x
+                    circleEnd = value
+                    rectEnd = value
+                    invalidate()
+                }
             }
         }
     }
@@ -89,12 +92,12 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    override fun performClick(): Boolean {
-        super.performClick()
-        buttonState = ButtonState.Loading
-        invalidate()
-        return true
-    }
+//    override fun performClick(): Boolean {
+//        super.performClick()
+//        buttonState = ButtonState.Loading
+//        invalidate()
+//        return true
+//    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -160,26 +163,37 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     private fun circleAnimation(): ValueAnimator {
-        valueAnimatorCircle = ValueAnimator.ofFloat(pointPosition.x, 360f)
+        valueAnimatorCircle = ValueAnimator.ofFloat(pointPosition.x, 365f)
         valueAnimatorCircle.addUpdateListener {
             value = valueAnimatorCircle.animatedValue as Float
             circleEnd = value
             invalidate()
         }
         valueAnimatorCircle.duration = durationAnimation
+        valueAnimatorCircle.repeatMode = ValueAnimator.RESTART
+        valueAnimatorCircle.repeatCount = ValueAnimator.INFINITE
         return valueAnimatorCircle
     }
 
     private fun progressBarAnimation(): ValueAnimator {
-        valueAnimatorBar = ValueAnimator.ofFloat(pointPosition.x, widthSize.toFloat())
+        valueAnimatorBar = ValueAnimator.ofFloat(pointPosition.x, widthSize.toFloat() + 5f)
         valueAnimatorBar.addUpdateListener {
             value = it.animatedValue as Float
             rectEnd = value
             invalidate()
         }
         valueAnimatorBar.duration = durationAnimation
+        valueAnimatorBar.repeatMode = ValueAnimator.RESTART
+        valueAnimatorBar.repeatCount = ValueAnimator.INFINITE
         return valueAnimatorBar
     }
 
+    fun checkIsOptionChosen(isChosen: Boolean){
+        isAnyOptionChosen = isChosen
+    }
+
+    fun setState(state: ButtonState){
+        buttonState = state
+    }
 
 }

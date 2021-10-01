@@ -3,7 +3,6 @@
     <dimen name="big_margin">24dp</dimen>
     <dimen name="big_big_margin">32dp</dimen>
     <dimen name="mega_margin">64dp</dimen>
-
     <dimen name="default_text_size">20sp</dimen>
     <dimen name="details_text_width">150dp</dimen>
 </resources>

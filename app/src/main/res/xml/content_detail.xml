@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Transition
+        app:autoTransition="animateToEnd"
+        app:constraintSetStart="@+id/start"
+        app:constraintSetEnd="@+id/end"
+        app:duration="2000">
+        <OnClick
+            app:targetId="@id/status"
+            app:clickAction="toggle"/>
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="0"
+                app:motionTarget="@id/status" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/status" />
+
+        </KeyFrameSet>
+    </Transition>
+
+    <!-- Constraints to apply at the start of the animation -->
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/status"
+            android:layout_width="@dimen/details_text_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/big_margin"
+            android:layout_marginEnd="@dimen/mega_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/status_label"
+            app:layout_constraintTop_toBottomOf="@+id/file_name">
+            <CustomAttribute
+                app:attributeName="textColor"
+                app:customColorValue="#FFFFFF" />
+        </Constraint>
+    </ConstraintSet>
+
+    <!-- Constraints to apply at the end of the animation -->
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/status"
+            android:layout_width="@dimen/details_text_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/big_margin"
+            android:layout_marginEnd="@dimen/mega_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/status_label"
+            app:layout_constraintTop_toBottomOf="@+id/file_name">
+            <CustomAttribute
+                app:attributeName="textColor"
+                app:customColorValue="#E53935" />
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>
